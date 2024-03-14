@@ -1,0 +1,41 @@
+﻿@model List<Empleado>
+@{
+    Departamento departamento =
+            ViewData["DEPART"] as Departamento;
+}
+
+<h1>Empleados Registro Departamento</h1>
+
+<ul class="list-group">
+    <li class="list-group-item list-group-item-danger">
+        Id Departamento: @departamento.IdDepartamento
+    </li>
+    <li class="list-group-item list-group-item-info">
+        Nombre: @departamento.Nombre
+    </li>
+    <li class="list-group-item list-group-item-info">
+        Localidad: @departamento.Localidad
+    </li>
+</ul>
+
+<h2 style="color:blue">
+    Registro @ViewData["POSICION"] de @ViewData["REGISTROS"]
+</h2>
+<div id="contenidoEmpleados" style="background-color: lightgreen"></div>
+
+
+
+@section Scripts {
+    <script>
+        function loadEmpleadoPaginacion(posicion) {
+            $(function () {
+                $("#contenidoEmpleados").load("/Paginacion/_EmpleadosDepartamentoDosPartial?posicion="
+                    + posicion + "&iddepartamento=" + @departamento.IdDepartamento);
+            });
+        }
+
+        loadEmpleadoPaginacion(1);
+    </script>
+}
+
+

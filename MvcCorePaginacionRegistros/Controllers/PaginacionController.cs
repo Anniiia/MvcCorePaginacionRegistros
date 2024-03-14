@@ -13,6 +13,70 @@ namespace MvcCorePaginacionRegistros.Controllers
         {
             this.repo = repo;
         }
+        public async Task<IActionResult> _EmpleadosDepartamentoDosPartial(int? posicion, int iddepartamento)
+        {
+            if (posicion == null)
+            {
+                posicion = 1;
+            }
+            ModelPaginacionDeptEmplDos model =
+                await this.repo.GetEmpleadoDepartamentoDosAsync(posicion.Value, iddepartamento);
+            int numeroRegistros = model.NumeroRegistrosEmpleados;
+            int siguiente = posicion.Value + 2;
+            if (siguiente > numeroRegistros)
+            {
+                siguiente = numeroRegistros;
+            }
+            int anterior = posicion.Value - 2;
+            if (anterior < 1)
+            {
+                anterior = 1;
+            }
+            ViewData["REGISTROS"] = numeroRegistros;
+            ViewData["ÚLTIMO"] = numeroRegistros;
+            ViewData["SIGUIENTE"] = siguiente;
+            ViewData["ANTERIOR"] = anterior;
+            ViewData["DEPART"] = model.Departamento;
+            ViewData["POSICION"] = posicion;
+            List<Empleado> empleados = model.Empleados;
+            return PartialView("_EmpleadosDepartamentoDosPartial", empleados);
+        }
+
+        public async Task<IActionResult> EmpleadosDepartamentoOutDos
+            (int? posicion, int iddepartamento)
+        {
+            if (posicion == null)
+            {
+                //POSICION PARA EL EMPLEADO
+                posicion = 1;
+            }
+            ModelPaginacionDeptEmplDos model = await
+                this.repo.GetEmpleadoDepartamentoDosAsync
+                (posicion.Value, iddepartamento);
+            Departamento departamento =
+                await this.repo.FindDepartamentosAsync(iddepartamento);
+            ViewData["DEPART"] = departamento;
+            ViewData["REGISTROS"] = model.NumeroRegistrosEmpleados;
+            ViewData["DEPARTAMENTO"] = iddepartamento;
+            int siguiente = posicion.Value + 2;
+            //DEBEMOS COMPROBAR QUE NO PASAMOS DEL NUMERO DE REGISTROS
+            if (siguiente > model.NumeroRegistrosEmpleados)
+            {
+                //EFECTO OPTICO
+                siguiente = model.NumeroRegistrosEmpleados;
+            }
+            int anterior = posicion.Value - 2;
+            if (anterior < 1)
+            {
+                anterior = 1;
+            }
+            ViewData["ULTIMO"] = model.NumeroRegistrosEmpleados;
+            ViewData["SIGUIENTE"] = siguiente;
+            ViewData["ANTERIOR"] = anterior;
+            ViewData["POSICION"] = posicion;
+            List<Empleado> empleados = model.Empleados;
+            return View(empleados);
+        }
         public async  Task<IActionResult> _EmpleadosDepartamentoPartial(int? posicion, int iddepartamento)
         {
             if (posicion == null)

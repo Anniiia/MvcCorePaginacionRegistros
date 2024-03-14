@@ -7,8 +7,11 @@
         @foreach (Departamento dept in Model)
         {
             <li>
-                <a class="dropdown-item" asp-controller="Paginacion" asp-action="EmpleadosDepartamentoOut" asp-route-iddepartamento="@dept.IdDepartamento">@dept.Nombre</a>
+                <a class="dropdown-item" asp-controller="Paginacion" asp-action="EmpleadosDepartamentoOut" asp-route-iddepartamento="@dept.IdDepartamento">@dept.Nombre pag 1</a>
 
+            </li>
+            <li>
+                <a class="dropdown-item" asp-controller="Paginacion" asp-action="EmpleadosDepartamentoOutDos" asp-route-iddepartamento="@dept.IdDepartamento">@dept.Nombre pag 2/3</a>
             </li>
         }
     </ul>

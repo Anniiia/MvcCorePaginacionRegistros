@@ -128,6 +128,10 @@ using System.Diagnostics.Metrics;
 //    where QUERY.POSICION >= @posicion
 //go
 
+//declare @registros int 
+//set @registros = 0
+//exec SP_GRUPO_EMPLEADOS_DEPARTAMENTO_DOSOUT 1,10, @registros out
+
 #endregion
 
 namespace MvcCorePaginacionRegistros.Repositories
@@ -140,6 +144,31 @@ namespace MvcCorePaginacionRegistros.Repositories
         public RepositoryHospital(HospitalContext context) {
 
             this.context = context;
+        }
+        public async Task<ModelPaginacionDeptEmplDos>
+           GetEmpleadoDepartamentoDosAsync
+           (int posicion, int iddepartamento)
+        {
+            string sql = "SP_GRUPO_EMPLEADOS_DEPARTAMENTO_DOSOUT @posicion, @departamento, "
+                + " @registros out";
+            SqlParameter pamPosicion = new SqlParameter("@posicion", posicion);
+            SqlParameter pamDepartamento =
+                new SqlParameter("@departamento", iddepartamento);
+            SqlParameter pamRegistros = new SqlParameter("@registros", -1);
+            pamRegistros.Direction = ParameterDirection.Output;
+            var consulta =
+                this.context.Empleados.FromSqlRaw
+                (sql, pamPosicion, pamDepartamento, pamRegistros);
+            //PRIMERO DEBEMOS EJECUTAR LA CONSULTA PARA PODER RECUPERAR 
+            //LOS PARAMETROS DE SALIDA
+            var datos = await consulta.ToListAsync();
+            List<Empleado> empleados = datos;
+            int registros = (int)pamRegistros.Value;
+            return new ModelPaginacionDeptEmplDos
+            {
+                NumeroRegistrosEmpleados = registros,
+                Empleados = empleados
+            };
         }
 
         public async Task<ModelPaginacionDepartamentosEmpleados>
