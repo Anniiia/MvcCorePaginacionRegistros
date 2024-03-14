@@ -4,82 +4,94 @@
     int numeroRegistros = (int)ViewData["REGISTROS"];
     int numeroPagina = 1;
 }
-<h3 class="mt-3">
-    Empleado @ViewData["POSICION"] de @ViewData["ÚLTIMO"]
-</h3>
+
+@if (numeroRegistros!= 0)
+{
+
+    <h3 class="mt-3">
+        Empleado @ViewData["POSICION"] de @ViewData["ÚLTIMO"]
+    </h3>
 
 
-<ul class="list-group list-group-horizontal">
-    <li class="list-group-item">
-        <button onclick="loadEmpleadoPaginacion(1)" class="btn">
-            Primero
-        </button>
-    </li>
-    <li class="list-group-item">
-        <button onclick="loadEmpleadoPaginacion(@ViewData["ANTERIOR"])" class="btn">
-            Anterior
-        </button>
-    </li>
-    <li class="list-group-item">
-        <button onclick="loadEmpleadoPaginacion(@ViewData["SIGUIENTE"])" class="btn">
-            Siguiente
-        </button>
-    </li>
-    <li class="list-group-item">
-        <button onclick="loadEmpleadoPaginacion(@ViewData["ÚLTIMO"])" class="btn">
-            Último
-        </button>
-    </li>
-</ul>
-
-<ul class="list-group list-group-horizontal">
-    @for (int i = 1; i <= numeroRegistros; i += 2)
-    {
+    <ul class="list-group list-group-horizontal">
         <li class="list-group-item">
-            <button onclick="loadEmpleadoPaginacion(@i)" class="btn">
-                Página @numeroPagina
+            <button onclick="loadEmpleadoPaginacion(1)" class="btn">
+                Primero
             </button>
         </li>
-@*         <li class="list-group-item list-group-item-danger">
-            <a asp-controller="Paginacion"
-               asp-action="PaginarGrupoDepartamentos"
-               asp-route-posicion="@i">
-                Página @numeroPagina
-            </a>
-        </li> *@
-        numeroPagina += 1;
-    }
-</ul>
+        <li class="list-group-item">
+            <button onclick="loadEmpleadoPaginacion(@ViewData["ANTERIOR"])" class="btn">
+                Anterior
+            </button>
+        </li>
+        <li class="list-group-item">
+            <button onclick="loadEmpleadoPaginacion(@ViewData["SIGUIENTE"])" class="btn">
+                Siguiente
+            </button>
+        </li>
+        <li class="list-group-item">
+            <button onclick="loadEmpleadoPaginacion(@ViewData["ÚLTIMO"])" class="btn">
+                Último
+            </button>
+        </li>
+    </ul>
+
+    <ul class="list-group list-group-horizontal">
+        @for (int i = 1; i <= numeroRegistros; i += 2)
+        {
+            <li class="list-group-item">
+                <button onclick="loadEmpleadoPaginacion(@i)" class="btn">
+                    Página @numeroPagina
+                </button>
+            </li>
+            @*         <li class="list-group-item list-group-item-danger">
+    <a asp-controller="Paginacion"
+    asp-action="PaginarGrupoDepartamentos"
+    asp-route-posicion="@i">
+    Página @numeroPagina
+    </a>
+    </li> *@
+            numeroPagina += 1;
+        }
+    </ul>
 
 
 
-<table class="table table-borderless table-success">
-    <thead>
-        <tr>
-            <th>EMPNO</th>
-            <th>APELLIDO</th>
-            <th>OFICIO</th>
-            <th>SALARIO</th>
-            <th>DEPTNO</th>
-        </tr>
-    </thead>
-    <tbody>
-        
+    <table class="table table-borderless table-success">
+        <thead>
+            <tr>
+                <th>EMPNO</th>
+                <th>APELLIDO</th>
+                <th>OFICIO</th>
+                <th>SALARIO</th>
+                <th>DEPTNO</th>
+            </tr>
+        </thead>
+        <tbody>
+
             @foreach (Empleado emp in Model)
             {
-            <tr>
-                <td>@emp.IdEmpleado</td>
-                <td>@emp.Apellido</td>
-                <td>@emp.Oficio</td>
-                <td>@emp.Salario</td>
-                <td>@emp.IdDepartamento</td>
-            </tr>
+                <tr>
+                    <td>@emp.IdEmpleado</td>
+                    <td>@emp.Apellido</td>
+                    <td>@emp.Oficio</td>
+                    <td>@emp.Salario</td>
+                    <td>@emp.IdDepartamento</td>
+                </tr>
             }
-            
-        
-    </tbody>
-</table>
 
+
+        </tbody>
+    </table>
+
+
+
+}
+else
+{
+    
+    <h2>No existen registros para este departamento</h2>
+}
 
 
 
